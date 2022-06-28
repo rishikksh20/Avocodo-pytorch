@@ -5,6 +5,9 @@ Unofficial implementation of [Avocodo: Generative Adversarial Network for Artifa
 ## Notes:
 * Avocodo uses same Generator as HiFi-GAN V1 and V2 but using different discriminators for modelling better lower and higher frequencies.
 * PQMF is the crucial for both Discriminators.
+* Losses are similar to HiFi-GAN.
+* Performance and speed both are some what similar to HiFi-GAN.
+* Avocodo far better than HiFi-GAN when it comes to synthesize unseen speaker.
 
 
 ## Citations:
