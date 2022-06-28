@@ -1,6 +1,7 @@
 # Avocodo: Generative Adversarial Network for Artifact-free Vocoder [Coming Soon]
 
-Unofficial implementation of [Avocodo: Generative Adversarial Network for Artifact-free Vocoder](https://arxiv.org/abs/2206.13404) .
+Unofficial implementation of [Avocodo: Generative Adversarial Network for Artifact-free Vocoder](https://arxiv.org/abs/2206.13404).
+![](avocodo_arch.png)
 
 ## Notes:
 * Avocodo uses same Generator as HiFi-GAN V1 and V2 but using different discriminators for modelling better lower and higher frequencies.
