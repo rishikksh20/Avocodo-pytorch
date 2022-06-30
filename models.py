@@ -304,8 +304,8 @@ class MultiCoMBDiscriminator(torch.nn.Module):
         y_hat.append(p1_hat_)
         fmap_hat.append(p1_fmap_hat_)
 
-        x2_ = self.pqmf_2(x)    # Select first band
-        x1_ = self.pqmf_4(x)    # Select first band after figuring out shape of ouput PQMF
+        x2_ = self.pqmf_2(x)[:, :1, :]    # Select first band
+        x1_ = self.pqmf_4(x)[:, :1, :]    # Select first band
 
         x2_hat_ = self.pqmf_2(x_hat)
         x1_hat_ = self.pqmf_4(x_hat)
@@ -331,23 +331,25 @@ class MultiCoMBDiscriminator(torch.nn.Module):
 class MultiSubBandDiscriminator(torch.nn.Module):
 
     def __init__(self, tkernels, fkernel, tchannels, fchannels, tstrides, fstride, tdilations, fdilations, tsubband,
-                 n, m):
+                 n, m, freq_init_ch):
 
         super(MultiSubBandDiscriminator, self).__init__()
 
-        self.fsbd = SubBandDiscriminator(channels=fchannels, kernel=fkernel, strides=fstride, dilations=fdilations)
+        self.fsbd = SubBandDiscriminator(init_channel=freq_init_ch, channels=fchannels, kernel=fkernel,
+                                         strides=fstride, dilations=fdilations)
 
-        self.tsbd1 = SubBandDiscriminator(channels=tchannels, kernel=tkernels[0], strides=tstrides[0],
-                                          dilations=tdilations[0])
         self.tsubband1 = tsubband[0]
+        self.tsbd1 = SubBandDiscriminator(init_channel=self.tsubband1, channels=tchannels, kernel=tkernels[0],
+                                          strides=tstrides[0], dilations=tdilations[0])
 
-        self.tsbd2 = SubBandDiscriminator(channels=tchannels, kernel=tkernels[1], strides=tstrides[1],
-                                          dilations=tdilations[1])
         self.tsubband2 = tsubband[1]
+        self.tsbd2 = SubBandDiscriminator(init_channel=self.tsubband2, channels=tchannels, kernel=tkernels[1],
+                                          strides=tstrides[1], dilations=tdilations[1])
 
-        self.tsbd3 = SubBandDiscriminator(channels=tchannels, kernel=tkernels[2], strides=tstrides[2],
-                                          dilations=tdilations[2])
         self.tsubband3 = tsubband[2]
+        self.tsbd3 = SubBandDiscriminator(init_channel=self.tsubband3, channels=tchannels, kernel=tkernels[2],
+                                          strides=tstrides[2], dilations=tdilations[2])
+
 
         self.pqmf_n = PQMF(N=n, taps=256, cutoff=0.03, beta=10.0)
         self.pqmf_m = PQMF(N=m, taps=256, cutoff=0.1, beta=9.0)
@@ -362,22 +364,22 @@ class MultiSubBandDiscriminator(torch.nn.Module):
         xn = self.pqmf_n(x)
         xn_hat = self.pqmf_n(x_hat)
 
-        q3, feat_q3 = self.tsbd3(xn)
-        q3_hat, feat_q3_hat = self.tsbd3(xn_hat)
+        q3, feat_q3 = self.tsbd3(xn[:, :self.tsubband3, :])
+        q3_hat, feat_q3_hat = self.tsbd3(xn_hat[:, :self.tsubband3, :])
         y.append(q3)
         y_hat.append(q3_hat)
         fmap.append(feat_q3)
         fmap_hat.append(feat_q3_hat)
 
-        q2, feat_q2 = self.tsbd2(xn)
-        q2_hat, feat_q2_hat = self.tsbd2(xn_hat)
+        q2, feat_q2 = self.tsbd2(xn[:, :self.tsubband2, :])
+        q2_hat, feat_q2_hat = self.tsbd2(xn_hat[:, :self.tsubband2, :])
         y.append(q2)
         y_hat.append(q2_hat)
         fmap.append(feat_q2)
         fmap_hat.append(feat_q2_hat)
 
-        q1, feat_q1 = self.tsbd1(xn)
-        q1_hat, feat_q1_hat = self.tsbd1(xn_hat)
+        q1, feat_q1 = self.tsbd1(xn[:, :self.tsubband1, :])
+        q1_hat, feat_q1_hat = self.tsbd1(xn_hat[:, :self.tsubband1, :])
         y.append(q1)
         y_hat.append(q1_hat)
         fmap.append(feat_q1)

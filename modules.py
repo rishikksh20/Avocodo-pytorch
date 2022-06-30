@@ -64,12 +64,12 @@ class MDC(torch.nn.Module):
 
 class SubBandDiscriminator(torch.nn.Module):
 
-    def __init__(self, channels, kernel, strides, dilations, use_spectral_norm=False):
+    def __init__(self, init_channel, channels, kernel, strides, dilations, use_spectral_norm=False):
         super(SubBandDiscriminator, self).__init__()
         norm_f = weight_norm if use_spectral_norm == False else spectral_norm
 
         self.mdcs = torch.nn.ModuleList()
-        init_channel = 1
+
         for c, s, d in zip(channels, strides, dilations):
             self.mdcs.append(MDC(init_channel, c, kernel, s, d))
             init_channel = c
