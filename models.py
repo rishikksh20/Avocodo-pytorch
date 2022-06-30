@@ -274,7 +274,7 @@ class MultiCoMBDiscriminator(torch.nn.Module):
         self.pqmf_2 = PQMF(N=2, taps=256, cutoff=0.25, beta=10.0)
         self.pqmf_4 = PQMF(N=4, taps=192, cutoff=0.13, beta=10.0)
 
-    def forward(self, x, x2, x1, x_hat, x2_hat, x1_hat):
+    def forward(self, x, x_hat, x2_hat, x1_hat):
         y = []
         y_hat = []
         fmap = []
@@ -288,7 +288,13 @@ class MultiCoMBDiscriminator(torch.nn.Module):
         y_hat.append(p3_hat)
         fmap_hat.append(p3_fmap_hat)
 
-        p2_, p2_fmap_ = self.combd_2(x2)
+        x2_ = self.pqmf_2(x)[:, :1, :]  # Select first band
+        x1_ = self.pqmf_4(x)[:, :1, :]  # Select first band
+
+        x2_hat_ = self.pqmf_2(x_hat)[:, :1, :]
+        x1_hat_ = self.pqmf_4(x_hat)[:, :1, :]
+
+        p2_, p2_fmap_ = self.combd_2(x2_)
         y.append(p2_)
         fmap.append(p2_fmap_)
 
@@ -296,7 +302,7 @@ class MultiCoMBDiscriminator(torch.nn.Module):
         y_hat.append(p2_hat_)
         fmap_hat.append(p2_fmap_hat_)
 
-        p1_, p1_fmap_ = self.combd_1(x1)
+        p1_, p1_fmap_ = self.combd_1(x1_)
         y.append(p1_)
         fmap.append(p1_fmap_)
 
@@ -304,11 +310,9 @@ class MultiCoMBDiscriminator(torch.nn.Module):
         y_hat.append(p1_hat_)
         fmap_hat.append(p1_fmap_hat_)
 
-        x2_ = self.pqmf_2(x)[:, :1, :]    # Select first band
-        x1_ = self.pqmf_4(x)[:, :1, :]    # Select first band
 
-        x2_hat_ = self.pqmf_2(x_hat)[:, :1, :]
-        x1_hat_ = self.pqmf_4(x_hat)[:, :1, :]
+
+
 
         p2, p2_fmap = self.combd_2(x2_)
         y.append(p2)
