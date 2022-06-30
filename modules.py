@@ -70,8 +70,8 @@ class SubBandDiscriminator(torch.nn.Module):
 
         self.mdcs = torch.nn.ModuleList()
         init_channel = 1
-        for c, s in zip(channels, strides):
-            self.mdcs.append(MDC(init_channel, c, kernel, s, dilations))
+        for c, s, d in zip(channels, strides, dilations):
+            self.mdcs.append(MDC(init_channel, c, kernel, s, d))
             init_channel = c
         self.conv_post = norm_f(Conv1d(init_channel, 1, 3, padding=get_padding(3, 1)))
 
@@ -139,5 +139,6 @@ class PQMF(torch.nn.Module):
                                stride=self.N)
         x = F.conv1d(x, self.G, padding=self.taps // 2)
         return x
+
 
 

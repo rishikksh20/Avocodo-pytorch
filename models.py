@@ -4,6 +4,7 @@ import torch.nn as nn
 from torch.nn import Conv1d, ConvTranspose1d, AvgPool1d, Conv2d
 from torch.nn.utils import weight_norm, remove_weight_norm, spectral_norm
 from utils import init_weights, get_padding
+from modules import PQMF, CoMBD, SubBandDiscriminator
 
 LRELU_SLOPE = 0.1
 
@@ -260,6 +261,34 @@ class MultiScaleDiscriminator(torch.nn.Module):
             fmap_gs.append(fmap_g)
 
         return y_d_rs, y_d_gs, fmap_rs, fmap_gs
+
+
+class MultiCoMBDiscriminator(torch.nn.Module):
+
+    def __init__(self, kernels, channels, groups, strides):
+        super(MultiCoMBDiscriminator, self).__init__()
+        self.combd_1 = CoMBD(filters=channels, kernels=kernels[0], groups=groups, strides=strides)
+        self.combd_2 = CoMBD(filters=channels, kernels=kernels[1], groups=groups, strides=strides)
+        self.combd_3 = CoMBD(filters=channels, kernels=kernels[2], groups=groups, strides=strides)
+
+        self.pqmf_2 = PQMF(N=2, taps=256, cutoff=0.25, beta=10)
+        self.pqmf_4 = PQMF(N=4, taps=192, cutoff=0.13, beta=10)
+
+    def forward(self, x, x2, x1):
+        p3, p3_fmap = self.combd_3(x)
+
+        p2_, p2_fmap_ = self.combd_2(x2)
+        p1_, p1_fmap_ = self.combd_1(x1)
+
+        x2_ = self.pqmf_2(x)    # Select first band
+        x1_ = self.pqmf_4(x)    # Select first band after figuring out shape of ouput PQMF
+
+        p2, p2_fmap = self.combd_2(x2_)
+        p1, p1_fmap = self.combd_1(x1_)
+
+        return [p3, p2_, p2, p1_, p1], [p3_fmap, p2_fmap_, p2_fmap, p1_fmap_, p1_fmap]
+
+
 
 
 def feature_loss(fmap_r, fmap_g):
