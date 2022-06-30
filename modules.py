@@ -78,11 +78,11 @@ class SubBandDiscriminator(torch.nn.Module):
     def forward(self, x):
         fmap = []
 
-        for l in self.convs:
+        for l in self.mdcs:
             x = l(x)
             fmap.append(x)
         x = self.conv_post(x)
-        fmap.append(x)
+        #fmap.append(x)
         x = torch.flatten(x, 1, -1)
 
         return x, fmap
