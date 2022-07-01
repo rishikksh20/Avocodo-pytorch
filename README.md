@@ -3,6 +3,14 @@
 Unofficial implementation of [Avocodo: Generative Adversarial Network for Artifact-free Vocoder](https://arxiv.org/abs/2206.13404).
 ![](avocodo_arch.png)
 
+> **Disclaimer: It only works on config_v1.json for now and this repo build with experimentation purpose not for Production.**
+
+## Training:
+```
+python train.py --config config_v1.json
+```
+
+
 ## Notes:
 * Avocodo uses same Generator as HiFi-GAN V1 and V2 but using different discriminators for modelling better lower and higher frequencies.
 * PQMF is the crucial for both Discriminators.
