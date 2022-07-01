@@ -17,6 +17,7 @@ python train.py --config config_v1.json
 * Losses are similar to HiFi-GAN.
 * Performance and speed both are some what similar to HiFi-GAN.
 * Avocodo far better than HiFi-GAN when it comes to synthesize unseen speaker.
+* Code is now trainable but I am not sure weather it's working correctly or not.
 
 
 ## Citations:
