@@ -3,8 +3,8 @@
 Unofficial implementation of [Avocodo: Generative Adversarial Network for Artifact-free Vocoder](https://arxiv.org/abs/2206.13404).
 ![](avocodo_arch.png)
 
-> **Disclaimer: It only works on config_v1.json for now and this repo build with experimentation purpose not for Production.**
-
+> **Disclaimer:** It only works on config_v1.json for now and this repo build with experimentation purpose not for Production.
+- **For best quality speech synthesis please visit [deepsync.co](https://deepsync.co/)**
 ## Training:
 ```
 python train.py --config config_v1.json
