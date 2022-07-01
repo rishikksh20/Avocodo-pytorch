@@ -1,4 +1,4 @@
-# Avocodo: Generative Adversarial Network for Artifact-free Vocoder [Coming Soon]
+# Avocodo: Generative Adversarial Network for Artifact-free Vocoder
 
 Unofficial implementation of [Avocodo: Generative Adversarial Network for Artifact-free Vocoder](https://arxiv.org/abs/2206.13404).
 ![](avocodo_arch.png)
