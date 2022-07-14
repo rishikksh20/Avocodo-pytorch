@@ -298,7 +298,7 @@ class MultiCoMBDiscriminator(torch.nn.Module):
         y.append(p2_)
         fmap.append(p2_fmap_)
 
-        p2_hat_, p2_fmap_hat_ = self.combd_2(x2_hat)
+        p2_hat_, p2_fmap_hat_ = self.combd_2(x2_hat_)
         y_hat.append(p2_hat_)
         fmap_hat.append(p2_fmap_hat_)
 
@@ -306,7 +306,7 @@ class MultiCoMBDiscriminator(torch.nn.Module):
         y.append(p1_)
         fmap.append(p1_fmap_)
 
-        p1_hat_, p1_fmap_hat_ = self.combd_1(x1_hat)
+        p1_hat_, p1_fmap_hat_ = self.combd_1(x1_hat_)
         y_hat.append(p1_hat_)
         fmap_hat.append(p1_fmap_hat_)
 
@@ -314,19 +314,19 @@ class MultiCoMBDiscriminator(torch.nn.Module):
 
 
 
-        p2, p2_fmap = self.combd_2(x2_)
+        p2, p2_fmap = p2_, p2_fmap_
         y.append(p2)
         fmap.append(p2_fmap)
 
-        p2_hat, p2_fmap_hat = self.combd_2(x2_hat_)
+        p2_hat, p2_fmap_hat = self.combd_2(x2_hat)
         y_hat.append(p2_hat)
         fmap_hat.append(p2_fmap_hat)
 
-        p1, p1_fmap = self.combd_1(x1_)
+        p1, p1_fmap = p1_, p1_fmap_
         y.append(p1)
         fmap.append(p1_fmap)
 
-        p1_hat, p1_fmap_hat = self.combd_1(x1_hat_)
+        p1_hat, p1_fmap_hat = self.combd_1(x1_hat)
         y_hat.append(p1_hat)
         fmap_hat.append(p1_fmap_hat)
 
